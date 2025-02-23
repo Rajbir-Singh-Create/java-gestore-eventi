@@ -1,5 +1,6 @@
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Evento {
     // Proprietà
@@ -16,7 +17,6 @@ public class Evento {
         checkDate(data);
         checkPostiTotali(postiTotali);
         this.postiPrenotati = 0;
-        setPostiDisponibili();
     }
 
     //* getters e setters
@@ -45,7 +45,7 @@ public class Evento {
     }
 
     public void setPostiDisponibili() {
-        postiDisponibili = getPostiTotali() - getPostiPrenotati();
+        postiDisponibili = postiTotali - postiPrenotati;
     }
 
     public int getPostiDisponibili(){
@@ -53,45 +53,18 @@ public class Evento {
         return postiDisponibili;
     }
 
-    //* Metodi di servizio
-    // TODO: gestire le eccezioni
-    public int prenota(){
-        checkDate(data);
-        if (getPostiDisponibili() > getPostiPrenotati()){
-            postiPrenotati += 1;
-            setPostiDisponibili();
-            return postiPrenotati;
-        } else {
-            throw new IllegalArgumentException("Non ci sono più posti disponibili.");
-        }
-    }
-
-    public int disdici(){
-        checkDate(data);
-        if (getPostiPrenotati() > 0){
-            postiPrenotati -= 1;
-            setPostiDisponibili();
-            return postiPrenotati;
-        } else {
-            throw new IllegalArgumentException("Non ci sono posti prenotati.");
-        }
-    }
-
-    // private int calcolaPostiDisponibili(){
-    //     postiDisponibili = getPostiTotali() - getPostiPrenotati();
-    //     return postiDisponibili;
-    // }
-
     //* metodi di servizio per eseguire controlli
-    private LocalDate checkDate(LocalDate data){
-        if(data.isAfter(data.now())){
+    // controllo che la data non sia nel passato
+    private LocalDate checkDate(LocalDate data) {
+        if(data.isAfter(LocalDate.now())){
             return this.data = data;
         } else {
             throw new IllegalArgumentException("Non puoi inserire una data nel passato.");
         }
     }
 
-    private int checkPostiTotali(int postiTotali){
+    // Controllo che l'input dei posti totali non sia minore di 0
+    private int checkPostiTotali(int postiTotali) {
         if(postiTotali > 0){
             return this.postiTotali = postiTotali;
         } else {
@@ -99,11 +72,32 @@ public class Evento {
         }
     }
 
+    //* Metodi di servizio
+    public void prenota() throws IllegalStateException {
+        checkDate(data);
+        if (postiPrenotati >= postiTotali){
+            throw new IllegalStateException("Non ci sono più posti disponibili.");
+        } else {
+            postiPrenotati++;
+            setPostiDisponibili();
+        }
+    }
+
+    public void disdici() throws IllegalStateException {
+        checkDate(data);
+        if (postiPrenotati == 0){
+            throw new IllegalStateException("Non ci sono prenotazioni da disdire.");
+        } else {
+            postiPrenotati--;
+            setPostiDisponibili();
+        }
+    }
+
     //* override metodo toString()
-    // TODO: formattare correttamente la data
     @Override
     public String toString() {
-        return getData() + " - " + getTitolo();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        return data.format(formatter) + " - " + titolo;
     }
 
 }
