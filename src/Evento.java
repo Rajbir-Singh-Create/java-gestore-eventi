@@ -76,7 +76,7 @@ public class Evento {
     public void prenota() throws IllegalStateException {
         checkDate(data);
         if (postiPrenotati >= postiTotali){
-            throw new IllegalStateException("Non ci sono più posti disponibili.");
+            throw new IllegalStateException("Non puoi inserire più posti di quelli prenotabili.");
         } else {
             postiPrenotati++;
             setPostiDisponibili();
@@ -86,7 +86,7 @@ public class Evento {
     public void disdici() throws IllegalStateException {
         checkDate(data);
         if (postiPrenotati == 0){
-            throw new IllegalStateException("Non ci sono prenotazioni da disdire.");
+            throw new IllegalStateException("Non puoi disdire più posti di quelli prenotati.");
         } else {
             postiPrenotati--;
             setPostiDisponibili();
