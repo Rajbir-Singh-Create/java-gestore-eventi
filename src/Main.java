@@ -35,58 +35,63 @@ public class Main {
 
         // creazione evento - istanziazione
         Evento evento1 = new Evento(titolo, data, postiTotali);
+        evento1.setPostiDisponibili();
 
         //* Step 2-2
         // chiedere all’utente se e quante prenotazioni vuole fare e provare ad effettuarle, implementando opportuni controlli
-        // Ripetere il ciclo di richiesta input
-        System.out.println("Vuoi fare delle prenotazioni? (Y/n)");
-        Scanner scanInserimento = new Scanner(System.in);
-        String sceltaInserimento = scanInserimento.nextLine();
+        // TODO: Ripetere il ciclo di richiesta input
+        while (evento1.getPostiDisponibili() > 0) {
+            System.out.println("Vuoi fare delle prenotazioni? (Y/n)");
+            Scanner scanInserimento = new Scanner(System.in);
+            String sceltaInserimento = scanInserimento.nextLine();
         
-        if(sceltaInserimento.equalsIgnoreCase("y")){
-            try {
-                System.out.println("Inserisci il numero di posti che vuoi prenotare:");
-                Scanner scanNumPrenotazioni = new Scanner(System.in);
-                int numPrenotazioni = scanNumPrenotazioni.nextInt();
+            if(sceltaInserimento.equalsIgnoreCase("y")){
+                try {
+                    System.out.println("Inserisci il numero di posti che vuoi prenotare:");
+                    Scanner scanNumPrenotazioni = new Scanner(System.in);
+                    int numPrenotazioni = scanNumPrenotazioni.nextInt();
     
-                // ciclo for che richiama il metodo per il numero di volte inserito dall'utente
-                for(int i = 0; i < numPrenotazioni; i++){
-                    evento1.prenota();
-                }
+                    // ciclo for che richiama il metodo per il numero di volte inserito dall'utente
+                    for(int i = 0; i < numPrenotazioni; i++){
+                        evento1.prenota();
+                    }
             } catch (IllegalArgumentException e){
                 System.err.println(e);
             }
-            
+            System.out.println("Non è più possibile effettuare altre prenotazioni.\n");
             stampaRiepilogo(evento1);
-        } else {
-            stampaRiepilogo(evento1);
-            return;
+            } else {
+                stampaRiepilogo(evento1);
+                break;
+            }
         }
-
+        
         //* Step 2-4, 2-5
         // Chiedere all’utente se e quanti posti vuole disdire
-        System.out.println("Vuoi disdire delle prenotazioni? (Y/n)");
-        Scanner scanCancellazione = new Scanner(System.in);
-        String sceltaCancellazione = scanCancellazione.nextLine();
-
-        if(sceltaCancellazione.equalsIgnoreCase("y")){
-            try {
-                System.out.println("Inserisci il numero di posti che vuoi disdire:");
-                Scanner scanNumCancellazioni = new Scanner(System.in);
-                int numCancellazioni = scanNumCancellazioni.nextInt();
+        while (evento1.getPostiPrenotati() > 0) {
+            System.out.println("Vuoi disdire delle prenotazioni? (Y/n)");
+            Scanner scanCancellazione = new Scanner(System.in);
+            String sceltaCancellazione = scanCancellazione.nextLine();
     
-                // ciclo for che richiama il metodo per il numero di volte inserito dall'utente
-                for(int i = 0; i < numCancellazioni; i++){
-                    evento1.disdici();
+            if(sceltaCancellazione.equalsIgnoreCase("y")){
+                try {
+                    System.out.println("Inserisci il numero di posti che vuoi disdire:");
+                    Scanner scanNumCancellazioni = new Scanner(System.in);
+                    int numCancellazioni = scanNumCancellazioni.nextInt();
+        
+                    // ciclo for che richiama il metodo per il numero di volte inserito dall'utente
+                    for(int i = 0; i < numCancellazioni; i++){
+                        evento1.disdici();
+                    }
+                } catch (IllegalArgumentException e){
+                    System.err.println(e);
                 }
-            } catch (IllegalArgumentException e){
-                System.err.println(e);
+                System.out.println("Non ci sono più posti prenotati.\n");
+                stampaRiepilogo(evento1);
+            } else {
+                stampaRiepilogo(evento1);
+                break;
             }
-
-            stampaRiepilogo(evento1);
-        } else {
-            stampaRiepilogo(evento1);
-            return;
         }
     }
 
