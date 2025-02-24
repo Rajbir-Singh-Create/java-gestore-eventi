@@ -8,67 +8,11 @@ public class Main {
     public static void main(String[] args) throws Exception {
         Evento evento1 = creaEvento();
         evento1.setPostiDisponibili();
-        System.out.print("Evento creato con successo: ");
+        System.out.print("\nEvento creato con successo: ");
         stampaRiepilogo(evento1);
         
-
-        //* Step 2-2
-        // chiedere all’utente se e quante prenotazioni vuole fare
-        // e provare ad effettuarle, implementando opportuni controlli
-        while (evento1.getPostiDisponibili() > 0) {
-            System.out.print("Vuoi fare delle prenotazioni? (Y/n) ");
-            Scanner scanPrenotazioni = new Scanner(System.in);
-            String sceltaInserimento = scanPrenotazioni.nextLine();
-        
-            if(sceltaInserimento.equalsIgnoreCase("y")){
-                try {
-                    System.out.print("Inserisci il numero di posti che vuoi prenotare: ");
-                    int numPrenotazioni = scanPrenotazioni.nextInt();
-                    // ciclo for che richiama il metodo per il numero di volte inserito dall'utente
-                    for(int i = 0; i < numPrenotazioni; i++){
-                        evento1.prenota();
-                    }
-            } catch (IllegalArgumentException s){
-                System.err.println(s);
-            }
-            stampaRiepilogo(evento1);
-            } else {
-                stampaRiepilogo(evento1);
-                break;
-            }
-        }
-        if (evento1.getPostiDisponibili() == 0){
-            System.out.println("Non è più possibile effettuare altre prenotazioni.\n");
-        }
-        
-        //* Step 2-4, 2-5
-        // Chiedere all’utente se e quanti posti vuole disdire
-        // e provare ad effettuare le disdette, implementando opportuni controlli
-        while (evento1.getPostiPrenotati() > 0) {
-            System.out.print("Vuoi disdire delle prenotazioni? (Y/n) ");
-            Scanner scanCancellazione = new Scanner(System.in);
-            String sceltaCancellazione = scanCancellazione.nextLine();
-    
-            if(sceltaCancellazione.equalsIgnoreCase("y")){
-                try {
-                    System.out.print("Inserisci il numero di posti che vuoi disdire: ");
-                    int numCancellazioni = scanCancellazione.nextInt();
-                    // ciclo for che richiama il metodo per il numero di volte inserito dall'utente
-                    for(int i = 0; i < numCancellazioni; i++){
-                        evento1.disdici();
-                    }
-                } catch (IllegalArgumentException s){
-                    System.err.println(s);
-                }
-                stampaRiepilogo(evento1);
-            } else {
-                stampaRiepilogo(evento1);
-                break;
-            }
-        }
-        if (evento1.getPostiPrenotati() == 0){
-            System.out.println("Non ci sono posti prenotati.\n");
-        }
+        gestisciPrenotazioni(evento1);
+        gestisciDisdette(evento1);
     }
 
     //* Step 2-1 metodo per la creazione di un evento
@@ -88,7 +32,9 @@ public class Main {
         try {
             System.out.print("Data evento (dd/MM/yyyy): ");
             String dataInput = scan.nextLine();
+            // Formatto la data
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            // Converto la stringa della data in un oggetto di tipo LocalDate
             data = LocalDate.parse(dataInput, formatter);
         } catch (IllegalArgumentException s) {
             System.err.println(s);
@@ -110,7 +56,9 @@ public class Main {
             LocalTime ora = null;
             System.out.print("Ora evento (HH:mm): ");
             String oraInput = scanner.nextLine();
+            // Formatto l'ora
             DateTimeFormatter formatterOra = DateTimeFormatter.ofPattern("HH:mm");
+            // Converto la stringa dell'ora in un oggetto di tipo LocalTime
             ora = LocalTime.parse(oraInput, formatterOra);
 
             // Prendo il prezzo del biglietto
@@ -125,13 +73,69 @@ public class Main {
         }   
     }
 
-    public static void gestisciPrenotazioni(){
-
+    //* Step 2-2
+    // chiedere all’utente se e quante prenotazioni vuole fare
+    // e provare ad effettuarle, implementando opportuni controlli
+    public static void gestisciPrenotazioni(Evento evento){
+        while (evento.getPostiDisponibili() > 0) {
+            System.out.print("\nVuoi fare delle prenotazioni? (Y/n) ");
+            Scanner scanPrenotazioni = new Scanner(System.in);
+            String sceltaInserimento = scanPrenotazioni.nextLine();
+        
+            if(sceltaInserimento.equalsIgnoreCase("y")){
+                System.out.print("Inserisci il numero di posti che vuoi prenotare: ");
+                int numPrenotazioni = scanPrenotazioni.nextInt();
+                try {
+                    // ciclo for che richiama il metodo per il numero di volte inserito dall'utente
+                    for(int i = 0; i < numPrenotazioni; i++){
+                        evento.prenota();
+                    }
+            } catch (IllegalStateException s){
+                System.err.println(s);
+            }
+            stampaRiepilogo(evento);
+            } else {
+                stampaRiepilogo(evento);
+                break;
+            }
+        }
+        if (evento.getPostiDisponibili() == 0){
+            System.out.println("Non è più possibile effettuare altre prenotazioni.\n");
+        }
     }
+
+    //* Step 2-4, 2-5
+    // Chiedere all’utente se e quanti posti vuole disdire
+    // e provare ad effettuare le disdette, implementando opportuni controlli
+    public static void gestisciDisdette(Evento evento) {
+        // while (evento.getPostiPrenotati() > 0) {
+            System.out.print("\nVuoi disdire delle prenotazioni? (Y/n) ");
+            Scanner scanCancellazione = new Scanner(System.in);
+            String sceltaCancellazione = scanCancellazione.nextLine();
+    
+            if(sceltaCancellazione.equalsIgnoreCase("y")){                
+                System.out.print("Inserisci il numero di posti che vuoi disdire: ");
+                int numCancellazioni = scanCancellazione.nextInt();
+                try {
+                    // ciclo for che richiama il metodo per il numero di volte inserito dall'utente
+                    for(int i = 0; i < numCancellazioni; i++){
+                        evento.disdici();
+                    }
+                } catch (IllegalStateException s){
+                    System.err.println(s);
+                }
+                stampaRiepilogo(evento);
+            } else {
+                stampaRiepilogo(evento);
+                // break;
+            }
+        }
+    // }
 
     //* Step 2-3/6
     // Stampa a video un riepilogo dell'evento con il numero di posti prenotati e quelli disponibili
     public static void stampaRiepilogo(Evento evento){
+        System.out.println();
         System.out.println(evento.toString());
         System.out.println("Posti prenotati: " + evento.getPostiPrenotati());
         System.out.println("Posti disponibili: " + evento.getPostiDisponibili());  

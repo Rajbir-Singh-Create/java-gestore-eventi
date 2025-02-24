@@ -6,6 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.Locale;
 
 public class Concerto extends Evento {
+    // Proprietà
     private LocalTime ora;
     private double prezzo;
     
@@ -31,7 +32,8 @@ public class Concerto extends Evento {
         checkPrezzo(prezzo);
     }
 
-    // Metodi di servizio
+    //* Metodi di servizio
+    // Metodo di controllo che il prezzo sia maggiore di 0
     private double checkPrezzo(double prezzo){
         if (prezzo > 00.00) {
             return this.prezzo = prezzo;
@@ -40,9 +42,9 @@ public class Concerto extends Evento {
         }
     }
 
-    // Metodo per formattare data e ora
-    public String getDataOraFormattata(){
-        return getDataFormattata() + " " + ora.format(DateTimeFormatter.ofPattern("HH:mm"));
+    // Metodo per formattare l'ora
+    public String getOraFormattata(){
+        return ora.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
     // Metodo per formattare il prezzo
@@ -52,9 +54,10 @@ public class Concerto extends Evento {
         return prezzoFormattato;
     }
 
+    //* override metodo toString()
     @Override
     public String toString() {
-        return getDataOraFormattata() + " - " + getTitolo() + " - " + getPrezzoFormattato();
+        return getDataFormattata() + " " + getOraFormattata() + " - " + getTitolo() + " - " + getPrezzoFormattato();
     }
     
 }

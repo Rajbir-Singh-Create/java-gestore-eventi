@@ -19,7 +19,6 @@ public class Evento {
         this.postiPrenotati = 0;
     }
 
-    //* getters e setters
     public String getTitolo() {
         return titolo;
     }
@@ -72,11 +71,10 @@ public class Evento {
     }
 
     // Metodo per prenotare posti
-    // TODO: Sistemare, va gestita in maniera diversa
     public void prenota() {
-        checkDate(data);
+        checkDataPrenotazioneEDisdetta();
         if (postiPrenotati >= postiTotali){
-            throw new IllegalStateException("Non puoi inserire più posti di quelli prenotabili.");
+            throw new IllegalStateException("Non ci sono più posti disponibili.\n");
         } else {
             postiPrenotati++;
             setPostiDisponibili();
@@ -85,12 +83,19 @@ public class Evento {
 
     // Metodo per disdire posti
     public void disdici() {
-        checkDate(data);
+        checkDataPrenotazioneEDisdetta();
         if (postiPrenotati == 0){
-            throw new IllegalStateException("Non puoi disdire più posti di quelli prenotati.");
+            throw new IllegalStateException("Non ci sono posti prenotati.\n");
         } else {
             postiPrenotati--;
             setPostiDisponibili();
+        }
+    }
+
+    // Metodo per controllare che la data dell'evento non sia già passata
+    private void checkDataPrenotazioneEDisdetta(){
+        if(data.isBefore(LocalDate.now())){
+            throw new IllegalArgumentException("L'evento è già passato.");
         }
     }
 
