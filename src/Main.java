@@ -1,44 +1,16 @@
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        //* Step 2-1
-        // TODO fare un metodo per creare l'evento
-        // Chiedo all'utente di inserire un nuovo evento con tutti i parametri
-        System.out.println("Benvenuto, inserisci un nuovo evento:");
-
-        System.out.print("Titolo: ");
-        Scanner scan = new Scanner(System.in);
-        String titolo = scan.nextLine();
-    
-        LocalDate data = null;
-        try {
-            System.out.print("Data evento (dd/MM/yyy): ");
-            // Scanner scanData = new Scanner(System.in);
-            String dataInput = scan.nextLine();
-            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-            data = LocalDate.parse(dataInput, formatter);
-        } catch (IllegalArgumentException s) {
-            System.err.println(s);
-        }
-
-        int postiTotali = 0;
-        try {
-            System.out.print("Posti totali evento: ");
-            // Scanner scanPostiTotali = new Scanner(System.in);
-            postiTotali = scan.nextInt();
-        } catch (IllegalArgumentException s) {
-            System.err.println(s);
-        }
-
-        // creazione evento - istanziazione
-        Evento evento1 = new Evento(titolo, data, postiTotali);
+        Evento evento1 = creaEvento();
         evento1.setPostiDisponibili();
         System.out.print("Evento creato con successo: ");
         stampaRiepilogo(evento1);
+        
 
         //* Step 2-2
         // chiedere all’utente se e quante prenotazioni vuole fare
@@ -99,12 +71,66 @@ public class Main {
         }
     }
 
-    public static void creaEvento(Evento evento){
-        
+    //* Step 2-1 metodo per la creazione di un evento
+    public static Evento creaEvento(){
+        // Chiedo all'utente di inserire un nuovo evento con tutti i parametri
+        // in base alla scelta, verrà creato il tipo di evento adatto
+        Scanner scan = new Scanner (System.in);
+        System.out.print("Benvenuto, vuoi creare un evento generico o un concerto? (E/C): ");
+        String scanScelta = scan.nextLine();
+
+        // Prendo il titolo
+        System.out.print("Titolo: ");
+        String titolo = scan.nextLine();
+    
+        // Prendo la data
+        LocalDate data = null;
+        try {
+            System.out.print("Data evento (dd/MM/yyyy): ");
+            String dataInput = scan.nextLine();
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+            data = LocalDate.parse(dataInput, formatter);
+        } catch (IllegalArgumentException s) {
+            System.err.println(s);
+        }
+
+        // Prendo i posti totali
+        int postiTotali = 0;
+        try {
+            System.out.print("Posti totali evento: ");
+            postiTotali = scan.nextInt();
+        } catch (IllegalArgumentException s) {
+            System.err.println(s);
+        }
+
+        // Se si tratta di un concerto
+        if(scanScelta.equalsIgnoreCase("C")){
+            // Prendo l'ora
+            Scanner scanner = new Scanner (System.in);
+            LocalTime ora = null;
+            System.out.print("Ora evento (HH:mm): ");
+            String oraInput = scanner.nextLine();
+            DateTimeFormatter formatterOra = DateTimeFormatter.ofPattern("HH:mm");
+            ora = LocalTime.parse(oraInput, formatterOra);
+
+            // Prendo il prezzo del biglietto
+            System.out.print("Prezzo del biglietto: ");
+            double prezzo = scan.nextDouble();
+
+            // creazione evento di tipo Concerto - istanziazione
+            return new Concerto(titolo, data, postiTotali, ora, prezzo);
+        } else {
+            // creazione evento di tipo Evento - istanziazione
+            return new Evento(titolo, data, postiTotali);
+        }   
+    }
+
+    public static void gestisciPrenotazioni(){
+
     }
 
     //* Step 2-3/6
-    // Stampare a video il numero di posti prenotati e quelli disponibili
+    // Stampa a video un riepilogo dell'evento con il numero di posti prenotati e quelli disponibili
     public static void stampaRiepilogo(Evento evento){
         System.out.println(evento.toString());
         System.out.println("Posti prenotati: " + evento.getPostiPrenotati());

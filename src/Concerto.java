@@ -1,8 +1,9 @@
 
-import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Locale;
 
 public class Concerto extends Evento {
     private LocalTime ora;
@@ -32,7 +33,7 @@ public class Concerto extends Evento {
 
     // Metodi di servizio
     private double checkPrezzo(double prezzo){
-        if (prezzo > 0) {
+        if (prezzo > 00.00) {
             return this.prezzo = prezzo;
         } else {
             throw new IllegalArgumentException("Il prezzo non può essere meno di 00,00 €.");
@@ -41,13 +42,14 @@ public class Concerto extends Evento {
 
     // Metodo per formattare data e ora
     public String getDataOraFormattata(){
-        return getData() + " " + ora.format(DateTimeFormatter.ofPattern("HH:mm"));
+        return getDataFormattata() + " " + ora.format(DateTimeFormatter.ofPattern("HH:mm"));
     }
 
     // Metodo per formattare il prezzo
     public String getPrezzoFormattato(){
-        DecimalFormat df = new DecimalFormat("##,##€");
-        return df.format(prezzo);
+        NumberFormat formatoEur = NumberFormat.getCurrencyInstance(Locale.ITALY);
+        String prezzoFormattato = formatoEur.format(prezzo);
+        return prezzoFormattato;
     }
 
     @Override

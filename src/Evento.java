@@ -49,12 +49,11 @@ public class Evento {
     }
 
     public int getPostiDisponibili(){
-        // postiDisponibili = getPostiTotali() - getPostiPrenotati();
         return postiDisponibili;
     }
 
-    //* metodi di servizio per eseguire controlli
-    // controllo che la data non sia nel passato
+    //* metodi di servizio
+    // Metodo di controllo che la data non sia nel passato
     private LocalDate checkDate(LocalDate data) {
         if(data.isAfter(LocalDate.now())){
             return this.data = data;
@@ -63,7 +62,7 @@ public class Evento {
         }
     }
 
-    // Controllo che l'input dei posti totali non sia minore di 0
+    // Metodo di controllo che l'input dei posti totali non sia minore di 0
     private int checkPostiTotali(int postiTotali) {
         if(postiTotali > 0){
             return this.postiTotali = postiTotali;
@@ -72,7 +71,8 @@ public class Evento {
         }
     }
 
-    //* Metodi di servizio
+    // Metodo per prenotare posti
+    // TODO: Sistemare, va gestita in maniera diversa
     public void prenota() {
         checkDate(data);
         if (postiPrenotati >= postiTotali){
@@ -83,6 +83,7 @@ public class Evento {
         }
     }
 
+    // Metodo per disdire posti
     public void disdici() {
         checkDate(data);
         if (postiPrenotati == 0){
@@ -93,11 +94,15 @@ public class Evento {
         }
     }
 
+    // Metodo per formattare la data
+    public String getDataFormattata(){
+        return data.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+    }
+
     //* override metodo toString()
     @Override
     public String toString() {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        return data.format(formatter) + " - " + titolo;
+        return getDataFormattata() + " - " + titolo;
     }
 
 }
