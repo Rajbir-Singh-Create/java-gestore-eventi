@@ -73,7 +73,7 @@ public class Evento {
     }
 
     //* Metodi di servizio
-    public void prenota() throws IllegalStateException {
+    public void prenota() {
         checkDate(data);
         if (postiPrenotati >= postiTotali){
             throw new IllegalStateException("Non puoi inserire più posti di quelli prenotabili.");
@@ -83,7 +83,7 @@ public class Evento {
         }
     }
 
-    public void disdici() throws IllegalStateException {
+    public void disdici() {
         checkDate(data);
         if (postiPrenotati == 0){
             throw new IllegalStateException("Non puoi disdire più posti di quelli prenotati.");

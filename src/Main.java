@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws Exception {
         //* Step 2-1
+        // TODO fare un metodo per creare l'evento
         // Chiedo all'utente di inserire un nuovo evento con tutti i parametri
         System.out.println("Benvenuto, inserisci un nuovo evento:");
 
@@ -20,8 +21,8 @@ public class Main {
             String dataInput = scan.nextLine();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             data = LocalDate.parse(dataInput, formatter);
-        } catch (IllegalArgumentException e) {
-            System.err.println(e);
+        } catch (IllegalArgumentException s) {
+            System.err.println(s);
         }
 
         int postiTotali = 0;
@@ -29,8 +30,8 @@ public class Main {
             System.out.print("Posti totali evento: ");
             // Scanner scanPostiTotali = new Scanner(System.in);
             postiTotali = scan.nextInt();
-        } catch (IllegalArgumentException e) {
-            System.err.println(e);
+        } catch (IllegalArgumentException s) {
+            System.err.println(s);
         }
 
         // creazione evento - istanziazione
@@ -55,8 +56,8 @@ public class Main {
                     for(int i = 0; i < numPrenotazioni; i++){
                         evento1.prenota();
                     }
-            } catch (IllegalArgumentException e){
-                System.err.println(e);
+            } catch (IllegalArgumentException s){
+                System.err.println(s);
             }
             stampaRiepilogo(evento1);
             } else {
@@ -84,8 +85,8 @@ public class Main {
                     for(int i = 0; i < numCancellazioni; i++){
                         evento1.disdici();
                     }
-                } catch (IllegalArgumentException e){
-                    System.err.println(e);
+                } catch (IllegalArgumentException s){
+                    System.err.println(s);
                 }
                 stampaRiepilogo(evento1);
             } else {
@@ -96,6 +97,10 @@ public class Main {
         if (evento1.getPostiPrenotati() == 0){
             System.out.println("Non ci sono posti prenotati.\n");
         }
+    }
+
+    public static void creaEvento(Evento evento){
+        
     }
 
     //* Step 2-3/6
