@@ -7,7 +7,6 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) throws Exception {
         Evento evento1 = creaEvento();
-        evento1.setPostiDisponibili();
         System.out.print("\nEvento creato con successo: ");
         stampaRiepilogo(evento1);
         
@@ -35,6 +34,7 @@ public class Main {
             // Formatto la data
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
             // Converto la stringa della data in un oggetto di tipo LocalDate
+            // e assegno il risultato alla variabile data
             data = LocalDate.parse(dataInput, formatter);
         } catch (IllegalArgumentException s) {
             System.err.println(s);
@@ -59,11 +59,17 @@ public class Main {
             // Formatto l'ora
             DateTimeFormatter formatterOra = DateTimeFormatter.ofPattern("HH:mm");
             // Converto la stringa dell'ora in un oggetto di tipo LocalTime
+            // e lo assegno alla variabile ora
             ora = LocalTime.parse(oraInput, formatterOra);
 
             // Prendo il prezzo del biglietto
-            System.out.print("Prezzo del biglietto: ");
-            double prezzo = scan.nextDouble();
+            double prezzo = 0;
+            try {
+                System.out.print("Prezzo del biglietto: ");
+                prezzo = scan.nextDouble();
+            } catch (IllegalArgumentException e) {
+                System.err.println(e);
+            }
 
             // creazione evento di tipo Concerto - istanziazione
             return new Concerto(titolo, data, postiTotali, ora, prezzo);
@@ -90,17 +96,14 @@ public class Main {
                     for(int i = 0; i < numPrenotazioni; i++){
                         evento.prenota();
                     }
-            } catch (IllegalStateException s){
-                System.err.println(s);
-            }
-            stampaRiepilogo(evento);
+                } catch (IllegalStateException s){
+                    System.err.println(s);
+                }
+                stampaRiepilogo(evento);
             } else {
                 stampaRiepilogo(evento);
                 break;
             }
-        }
-        if (evento.getPostiDisponibili() == 0){
-            System.out.println("Non è più possibile effettuare altre prenotazioni.\n");
         }
     }
 
@@ -108,7 +111,7 @@ public class Main {
     // Chiedere all’utente se e quanti posti vuole disdire
     // e provare ad effettuare le disdette, implementando opportuni controlli
     public static void gestisciDisdette(Evento evento) {
-        // while (evento.getPostiPrenotati() > 0) {
+        while (evento.getPostiPrenotati() > 0) {
             System.out.print("\nVuoi disdire delle prenotazioni? (Y/n) ");
             Scanner scanCancellazione = new Scanner(System.in);
             String sceltaCancellazione = scanCancellazione.nextLine();
@@ -127,10 +130,10 @@ public class Main {
                 stampaRiepilogo(evento);
             } else {
                 stampaRiepilogo(evento);
-                // break;
+                break;
             }
         }
-    // }
+    }
 
     //* Step 2-3/6
     // Stampa a video un riepilogo dell'evento con il numero di posti prenotati e quelli disponibili

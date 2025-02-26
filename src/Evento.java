@@ -17,6 +17,7 @@ public class Evento {
         checkDate(data);
         checkPostiTotali(postiTotali);
         this.postiPrenotati = 0;
+        setPostiDisponibili();
     }
 
     public String getTitolo() {
@@ -43,7 +44,7 @@ public class Evento {
         return postiPrenotati;
     }
 
-    public void setPostiDisponibili() {
+    private void setPostiDisponibili() {
         postiDisponibili = postiTotali - postiPrenotati;
     }
 
@@ -85,7 +86,7 @@ public class Evento {
     public void disdici() {
         checkDataPrenotazioneEDisdetta();
         if (postiPrenotati == 0){
-            throw new IllegalStateException("Non ci sono posti prenotati.\n");
+            throw new IllegalStateException("Non puoi disdire più posti di quelli prenotati.\n");
         } else {
             postiPrenotati--;
             setPostiDisponibili();
